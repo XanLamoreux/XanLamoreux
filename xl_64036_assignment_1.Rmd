@@ -1,6 +1,8 @@
 ---
 title: "64036_Assignment_1"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -29,21 +31,104 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 summary(Online_Retail)
 
-```{r}
-install.packages("caret")
-library(caret)
-
-
-```
 
 
 head(Online_Retail)
 summary(Online_Retail)
-count(Online_Retail$Country)
+
 
 X1_test <- Online_Retail$Country
 summary(X1_test)
 head(Online_Retail)
+spec(Online_Retail)
+summary(Online_Retail)
+
+colSums(is.na(Online_Retail))
+
+table(grepl("^C", Online_Retail$InvoiceNo))
+
+
+
+table(Online_Retail$Country)
+revenue <- Online_Retail %>% group_by(Online_Retail$Country) %>% summarise (sales=sum(Online_Retail$Quantity*Online_Retail$UnitPrice))
+
+revenue <- Online_Retail %>% group_by(Online_Retail$Country) %>% summarise (Country_Count = n()) %>% mutate(country_percentage = (Country_Count/sum(Country_Count))*100) %>% filter(country_percentage>1)
+
+
+
+str(revenue)
+str(Online_Retail)
+revenue %>% select(sales)
+precoftotal <- revenue$sales * sum(revenue$sales)
+
+head(precoftotal)
+Percents <- Online_Retail %>% c(Online_Retail$Country, Online_Retail$Quantity, Online_Retail$UnitPrice)
+head(Percents)
+summary(Percents)
+Percent_1 <- c(Online_Retail$Country, Online_Retail$Quantity, Online_Retail$UnitPrice)
+summary(Percent_1)
+
+
+percent_2 <- Online_Retail %>% select(Online_Retail$Country, Online_Retail$Quantity, Online_Retail$UnitPrice)
+
+revenue["percents"] <- revenue$sales / sum($sales)
+summary(revenue)
+sum(revenue$sales)
+
+summary(Online_Retail)
+
+
+
+
+revenue <- Online_Retail %>% group_by(Online_Retail$Country)
+table(Online_Retail$Country)
+
+
+Online_Retail <- Online_Retail %>% mutate(TransactionValue = Quantity * UnitPrice)
+
+Online_Retail %>% group_by(Country) %>% summarise (sum_TransactionValue = sum(TransactionValue)) %>% filter (sum_TransactionValue > 130000)
+
+Online_Retail %>% filter(Country == "Germany")
+
+Germany <- Online_Retail %>% filter(Country == "Germany")
+hist(Germany$TransactionValue,main = paste("Histogram of Germany Transactions"))
+
+
+Online_Retail [!is.na(Online_Retail$CustomerID),] %>% group_by(CustomerID) %>% summarise (Customer_Count = n(),sum_total= sum(TransactionValue)) %>% arrange (desc(Customer_Count))
+
+Online_Retail [!is.na(Online_Retail$CustomerID),] %>% group_by(CustomerID) %>% summarise (Customer_Count = n(),sum_total= sum(TransactionValue)) %>% arrange (desc(sum_total))
+
+colMeans(is.na(Online_Retail)*100)
+
+Online_Retail %>% group_by(Country) %>% summarise(CustomerID_Missing = sum(is.na(CustomerID))) %>% filter(CustomerID_Missing>0)
+
+Online_Retail_Cancelled <- Online_Retail %>% filter(Country=="France",Quantity<0) %>% count()
+
+Online_Retail_Total <- Online_Retail %>% filter(Country == "France") %>% count()
+
+(Online_Retail_Cancelled$n / Online_Retail_Total$n)*100
+
+(149/8557)*100
+
+Online_Retail %>% group_by(StockCode) %>% summarise(sum_transactionvalue = sum(TransactionValue)) %>% arrange(desc(sum_transactionvalue))
+
+length(unique(Online_Retail$CustomerID))
+
+
+Temp=strptime(Online_Retail$InvoiceDate,format='%m/%d/%Y %H:%M',tz='GMT')
+
+Online_Retail$New_Invoice_Date <- as.Date(Temp)
+
+Online_Retail$Invoice_Day_Week= weekdays(Online_Retail$New_Invoice_Date)
+
+Online_Retail$New_Invoice_Hour = as.numeric(format(Temp, "%H"))
+
+Online_Retail$New_Invoice_Month = as.numeric(format(Temp, "%m"))
+
+Online_Retail %>% group_by(Invoice_Day_Week) %>% summarise(number_of_transactions=n()) %>% mutate(trans_percent = (number_of_transactions/sum(number_of_transactions))*100)
+
+
+
 
 
 
