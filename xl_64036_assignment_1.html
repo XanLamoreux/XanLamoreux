@@ -198,28 +198,87 @@ pre code {
 <p>percent_2 &lt;- Online_Retail %&gt;% select(Online_Retail<span class="math inline">\(Country, Online_Retail\)</span>Quantity, Online_Retail$UnitPrice)</p>
 <p>revenue[“percents”] &lt;- revenue<span class="math inline">\(sales / sum(\)</span>sales) summary(revenue) sum(revenue$sales)</p>
 <p>summary(Online_Retail)</p>
+<div id="show-the-breakdown-of-the-number-of-transactions-by-countries-i.e.-how-many-transactions-are-in-the-dataset-for-each-country-consider-all-records-including-cancelled-transactions.-show-this-in-total-number-and-also-in-percentage.-show-only-countries-accounting-for-more-than-1-of-the-total-transactions.-5-marks" class="section level3">
+<h3>Show the breakdown of the number of transactions by countries i.e. how many transactions are in the dataset for each country (consider all records including cancelled transactions). Show this in total number and also in percentage. Show only countries accounting for more than 1% of the total transactions. (5 marks)</h3>
 <p>revenue &lt;- Online_Retail %&gt;% group_by(Online_Retail<span class="math inline">\(Country) table(Online_Retail\)</span>Country)</p>
+</div>
+<div id="create-a-new-variable-transactionvalue-that-is-the-product-of-the-exising-quantity-and-unitprice-variables.-add-this-variable-to-the-dataframe.-5-marks" class="section level3">
+<h3>Create a new variable ‘TransactionValue’ that is the product of the exising ‘Quantity’ and ‘UnitPrice’ variables. Add this variable to the dataframe. (5 marks)</h3>
 <p>Online_Retail &lt;- Online_Retail %&gt;% mutate(TransactionValue = Quantity * UnitPrice)</p>
+</div>
+<div id="using-the-newly-created-variable-transactionvalue-show-the-breakdown-of-transaction-values-by-countries-i.e.-how-much-money-in-total-has-been-spent-each-country.-show-this-in-total-sum-of-transaction-values.-show-only-countries-with-total-transaction-exceeding-130000-british-pound.-10-marks" class="section level3">
+<h3>Using the newly created variable, TransactionValue, show the breakdown of transaction values by countries i.e. how much money in total has been spent each country. Show this in total sum of transaction values. Show only countries with total transaction exceeding 130,000 British Pound. (10 marks)</h3>
 <p>Online_Retail %&gt;% group_by(Country) %&gt;% summarise (sum_TransactionValue = sum(TransactionValue)) %&gt;% filter (sum_TransactionValue &gt; 130000)</p>
+</div>
+<div id="plot-the-histogram-of-transaction-values-from-germany.-use-the-hist-function-to-plot.-5-marks" class="section level3">
+<h3>Plot the histogram of transaction values from Germany. Use the hist() function to plot. (5 marks)</h3>
 <p>Online_Retail %&gt;% filter(Country == “Germany”)</p>
 <p>Germany &lt;- Online_Retail %&gt;% filter(Country == “Germany”) hist(Germany$TransactionValue,main = paste(“Histogram of Germany Transactions”))</p>
-<p>plot(Germany)</p>
+</div>
+<div id="which-customer-had-the-highest-number-of-transactions-which-customer-is-most-valuable-i.e.-highest-total-sum-of-transactions-10-marks" class="section level3">
+<h3>Which customer had the highest number of transactions? Which customer is most valuable (i.e. highest total sum of transactions)? (10 marks)</h3>
 <p>Online_Retail [!is.na(Online_Retail$CustomerID),] %&gt;% group_by(CustomerID) %&gt;% summarise (Customer_Count = n(),sum_total= sum(TransactionValue)) %&gt;% arrange (desc(Customer_Count))</p>
 <p>Online_Retail [!is.na(Online_Retail$CustomerID),] %&gt;% group_by(CustomerID) %&gt;% summarise (Customer_Count = n(),sum_total= sum(TransactionValue)) %&gt;% arrange (desc(sum_total))</p>
+</div>
+<div id="calculate-the-percentage-of-missing-values-for-each-variable-in-the-dataset-5-marks.-hint-colmeans" class="section level3">
+<h3>Calculate the percentage of missing values for each variable in the dataset (5 marks). Hint colMeans():</h3>
 <p>colMeans(is.na(Online_Retail)*100)</p>
+</div>
+<div id="what-are-the-number-of-transactions-with-missing-customerid-records-by-countries-10-marks" class="section level3">
+<h3>What are the number of transactions with missing CustomerID records by countries? (10 marks)</h3>
 <p>Online_Retail %&gt;% group_by(Country) %&gt;% summarise(CustomerID_Missing = sum(is.na(CustomerID))) %&gt;% filter(CustomerID_Missing&gt;0)</p>
+</div>
+<div id="in-the-retail-sector-it-is-very-important-to-understand-the-return-rate-of-the-goods-purchased-by-customers.-in-this-example-we-can-define-this-quantity-simply-as-the-ratio-of-the-number-of-transactions-cancelled-regardless-of-the-transaction-value-over-the-total-number-of-transactions.-with-this-definition-what-is-the-return-rate-for-the-french-customers-10-marks.-consider-the-cancelled-transactions-as-those-where-the-quantity-variable-has-a-negative-value." class="section level3">
+<h3>In the retail sector, it is very important to understand the return rate of the goods purchased by customers. In this example, we can define this quantity, simply, as the ratio of the number of transactions cancelled (regardless of the transaction value) over the total number of transactions. With this definition, what is the return rate for the French customers? (10 marks). Consider the cancelled transactions as those where the ‘Quantity’ variable has a negative value.</h3>
 <p>Online_Retail_Cancelled &lt;- Online_Retail %&gt;% filter(Country==“France”,Quantity&lt;0) %&gt;% count()</p>
 <p>Online_Retail_Total &lt;- Online_Retail %&gt;% filter(Country == “France”) %&gt;% count()</p>
 <p>(Online_Retail_Cancelled<span class="math inline">\(n / Online_Retail_Total\)</span>n)*100</p>
 <p>(149/8557)*100</p>
+</div>
+<div id="what-is-the-product-that-has-generated-the-highest-revenue-for-the-retailer-i.e.-item-with-the-highest-total-sum-of-transactionvalue.-10-marks" class="section level3">
+<h3>What is the product that has generated the highest revenue for the retailer? (i.e. item with the highest total sum of ‘TransactionValue’). (10 marks)</h3>
 <p>Online_Retail %&gt;% group_by(StockCode) %&gt;% summarise(sum_transactionvalue = sum(TransactionValue)) %&gt;% arrange(desc(sum_transactionvalue))</p>
+</div>
+<div id="how-many-unique-customers-are-represented-in-the-dataset-you-can-use-unique-and-length-functions.-5-marks" class="section level3">
+<h3>How many unique customers are represented in the dataset? You can use unique() and length() functions. (5 marks)</h3>
 <p>length(unique(Online_Retail$CustomerID))</p>
+</div>
+<div id="golden-question-section" class="section level3">
+<h3>#4 “Golden Question” Section</h3>
 <p>Temp=strptime(Online_Retail$InvoiceDate,format=‘%m/%d/%Y %H:%M’,tz=‘GMT’)</p>
 <p>Online_Retail$New_Invoice_Date &lt;- as.Date(Temp)</p>
 <p>Online_Retail<span class="math inline">\(Invoice_Day_Week= weekdays(Online_Retail\)</span>New_Invoice_Date)</p>
 <p>Online_Retail$New_Invoice_Hour = as.numeric(format(Temp, “%H”))</p>
 <p>Online_Retail$New_Invoice_Month = as.numeric(format(Temp, “%m”))</p>
+</div>
+<div id="show-the-percentage-of-transactions-by-numbers-by-days-of-the-week-extra-2-marks" class="section level3">
+<h3>Show the percentage of transactions (by numbers) by days of the week (extra 2 marks)</h3>
 <p>Online_Retail %&gt;% group_by(Invoice_Day_Week) %&gt;% summarise(number_of_transactions=n()) %&gt;% mutate(trans_percent = (number_of_transactions/sum(number_of_transactions))*100)</p>
+</div>
+<div id="show-the-percentage-of-transactions-by-transaction-volume-by-days-of-the-week-extra-1-marks" class="section level3">
+<h3>Show the percentage of transactions (by transaction volume) by days of the week (extra 1 marks)</h3>
+<p>Online_Retail %&gt;% group_by(Invoice_Day_Week) %&gt;% summarise(sum_of_trans=sum(TransactionValue)) %&gt;% mutate(trans_percent_2 = (sum_of_trans/sum(sum_of_trans))*100)</p>
+</div>
+<div id="show-the-percentage-of-transactions-by-transaction-volume-by-month-of-the-year-extra-1-marks" class="section level3">
+<h3>Show the percentage of transactions (by transaction volume) by month of the year (extra 1 marks)</h3>
+<p>Online_Retail %&gt;% group_by(New_Invoice_Month) %&gt;% summarise(sum_of_trans3 = sum(TransactionValue)) %&gt;% mutate(trans_percent_3 = (sum_of_trans3/sum(sum_of_trans3))*100)</p>
+</div>
+<div id="what-was-the-date-with-the-highest-number-of-transactions-from-australia-3-marks" class="section level3">
+<h3>What was the date with the highest number of transactions from Australia? (3 marks)</h3>
+<p>Online_Retail %&gt;% filter(Country == “Australia”) %&gt;% arrange(desc(TransactionValue))</p>
+<div id="the-company-needs-to-shut-down-the-website-for-two-consecutive-hours-for-maintenance.-what-would-be-the-hour-of-the-day-to-start-this-so-that-the-distribution-is-at-minimum-for-the-customers-the-responsible-it-team-is-available-from-700-to-2000-every-day.-3-marks" class="section level4">
+<h4>The company needs to shut down the website for two consecutive hours for maintenance. What would be the hour of the day to start this so that the distribution is at minimum for the customers? The responsible IT team is available from 7:00 to 20:00 every day. (3 marks)</h4>
+<p>Online_Retail %&gt;% group_by(New_Invoice_Hour) %&gt;% summarise(sum_of_trans4 = sum(TransactionValue)) %&gt;% mutate(trans_percent_4 = (sum_of_trans4/sum(sum_of_trans4))*100) %&gt;% arrange(desc(sum_of_trans4))</p>
+</div>
+</div>
+<div id="on-average-how-often-the-costumers-comeback-to-the-website-for-their-next-shopping-i.e.-what-is-the-average-number-of-days-between-consecutive-shopping-optionalgolden-question-18-additional-marks-hint-1.-a-close-approximation-is-also-acceptable-and-you-may-find-diff-function-useful." class="section level3">
+<h3>On average, how often the costumers comeback to the website for their next shopping? (i.e. what is the average number of days between consecutive shopping) (Optional/Golden question: 18 additional marks!) Hint: 1. A close approximation is also acceptable and you may find diff() function useful.</h3>
+<p>summary(Online_Retail)</p>
+<p>Online_Retail %&gt;% group_by(CustomerID) %&gt;% arrange(desc(New_Invoice_Date)</p>
+<p>Online_Retail %&gt;% group_by(CustomerID) %&gt;% arrange(desc(New_Invoice_Date)</p>
+<p>Retail_Test_Days &lt;- Online_Retail %&gt;% group_by(Online_Retail<span class="math inline">\(CustomerID) %&gt;% group_by(Online_Retail\)</span>New_Invoice_Date)</p>
+<p>View(Retail_Test_Days)</p>
+</div>
 </div>
 
 

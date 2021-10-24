@@ -1,8 +1,8 @@
 ---
 title: "64036_Assignment_1"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -192,6 +192,18 @@ Online_Retail %>% group_by(New_Invoice_Hour) %>% summarise(sum_of_trans4 = sum(T
 
 
 ### On average, how often the costumers comeback to the website for their next shopping? (i.e. what is the average number of days between consecutive shopping) (Optional/Golden question: 18 additional marks!) Hint: 1. A close approximation is also acceptable and you may find diff() function useful.
+
+
+summary(Online_Retail)
+
+Online_Retail %>% group_by(CustomerID) %>% arrange(desc(New_Invoice_Date)
+
+Online_Retail %>% group_by(CustomerID) %>% arrange(desc(New_Invoice_Date)
+
+Retail_Test_Days <- Online_Retail %>% group_by(Online_Retail$CustomerID) %>% group_by(Online_Retail$New_Invoice_Date)
+
+View(Retail_Test_Days)
+
 
 
 
