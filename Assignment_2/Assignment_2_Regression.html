@@ -188,7 +188,99 @@ pre code {
 <p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
 <p>mtcars &lt;- read_csv(“mtcars.csv”)</p>
 <p>install.packages(“caret”) library(caret) library(dplyr) install.packages(“tidyverse”) library(tidyverse) install.packages(“cluster”) library(cluster) install.packages(“factoextra”) library(factoextra) install.packages(“cowplot”) library(cowplot) library(ggplot2)</p>
-<p>set.seed(2017)</p>
+<p>set.seed(2017) head(mtcars) X=runif(100)<em>10 Y=X</em>4+3.45 Y=rnorm(100)<em>0.29</em>Y+Y plot(X,Y) cor(X,Y) ## 80.7% corrlation between X and Y</p>
+<p>df &lt;- data.frame(X,Y)</p>
+<p>Model_1 &lt;- lm(Y~X,data=df) summary(Model_1)</p>
+</div>
+<div id="ymxc" class="section level2">
+<h2>Y=MX+C</h2>
+</div>
+<div id="y3.6108x4.4655" class="section level2">
+<h2>Y=3.6108X+4.4655</h2>
+</div>
+<div id="the-accuracy-is-0.6517-based-on-the-r-squared-from-the-summary-of-the-model" class="section level2">
+<h2>The accuracy is 0.6517 based on the R Squared from the summary of the model</h2>
+<p>cor(X,Y) R_SQU &lt;- cor(X,Y)^2 R_SQU ## it’s the same as the square root of the coefficient 0.6517187</p>
+<p>ggplot(df,aes(x=X,y=Y))+geom_point()+geom_smooth(method=“lm”,se=FALSE)+labs(title=“simple linear regression Y and X”)</p>
+<p>head(mtcars)</p>
+<p>Model_James &lt;- lm(hp~wt,data=mtcars) summary(Model_James) ggplot(mtcars,aes(x=wt,y=hp))+geom_point()+geom_smooth(method=“lm”,se=FALSE)</p>
+<p>Model_Chris &lt;- lm(hp~mpg,data=mtcars) summary(Model_Chris) ggplot(mtcars,aes(x=mpg,y=hp))+geom_point()+geom_smooth(method=“lm”,se=FALSE)</p>
+</div>
+<div id="chris-model-is-more-accurate-in-terms-of-finding-horse-power" class="section level2">
+<h2>Chris’ model is more accurate in terms of finding horse power</h2>
+<p>Model_Cylinder &lt;- lm(hp~cyl+mpg,data=mtcars) summary(Model_Cylinder)</p>
+<p>predict(Model_Cylinder,data.frame(cyl=4,mpg=22))</p>
+</div>
+<div id="r-score-for-the-cylinder-model-is-88.93618" class="section level2">
+<h2>R score for the cylinder model is 88.93618</h2>
+<p>install.packages(‘mlbench’) library(mlbench) data(BostonHousing)</p>
+<p>glimpse(BostonHousing)</p>
+</div>
+<div id="so-the-medv-is-based-on-the-variables-such-as-the-crim-zn-ptratio-and-chas" class="section level2">
+<h2>so the medv is based on the variables such as the crim, zn, ptratio, and chas</h2>
+<p>apply(BostonHousing,2,function(x) {any(is.na(x))})</p>
+<p>BH_Model &lt;- lm(medv~crim+zn+ptratio+chas,data=BostonHousing) summary(BH_Model)</p>
+</div>
+<div id="this-model-is-not-as-accurate-as-expected-its-only-35-accurate" class="section level2">
+<h2>this model is not as accurate as expected, it’s only 35% accurate</h2>
+<p>BH_Model2 &lt;- lm(medv~.,data=BostonHousing) summary(BH_Model2)</p>
+</div>
+<div id="the-chas-impacts-the-intercept-by-2.687-so-the-intercept-without-the-chas-36.46-and-with-the-chas-it-is-equal-to-36.462.687-39.147" class="section level2">
+<h2>the chas impacts the intercept by 2.687 so the intercept without the chas = 36.46 and with the chas it is equal to 36.46+2.687 = 39.147</h2>
+</div>
+<div id="p-variables" class="section level2">
+<h2>p variables</h2>
+</div>
+<div id="this-will-run-only-significant-values" class="section level2">
+<h2>this will run only significant values</h2>
+<p>install.packages(“tidyr”) library(tidyr) install.packages(“dplyr”) library(dplyr)</p>
+<p>tidy(BH_Model2) %&gt;% filter(p.value&lt;0.001) %&gt;% select(term)</p>
+<p>install.packages(“generics”) library(generics)</p>
+<div id="zn-4.642e-02-1.373e-02-3.382-0.000778" class="section level3">
+<h3>zn 4.642e-02 1.373e-02 3.382 0.000778 ***</h3>
+</div>
+<div id="nox--1.777e01-3.820e00--4.651-4.25e-06" class="section level3">
+<h3>nox -1.777e+01 3.820e+00 -4.651 4.25e-06 ***</h3>
+</div>
+<div id="rm-3.810e00-4.179e-01-9.116-2e-16" class="section level3">
+<h3>rm 3.810e+00 4.179e-01 9.116 &lt; 2e-16 ***</h3>
+</div>
+<div id="dis--1.476e00-1.995e-01--7.398-6.01e-13" class="section level3">
+<h3>dis -1.476e+00 1.995e-01 -7.398 6.01e-13 ***</h3>
+</div>
+<div id="rad-3.060e-01-6.635e-02-4.613-5.07e-06" class="section level3">
+<h3>rad 3.060e-01 6.635e-02 4.613 5.07e-06 ***</h3>
+</div>
+<div id="ptratio--9.527e-01-1.308e-01--7.283-1.31e-12" class="section level3">
+<h3>ptratio -9.527e-01 1.308e-01 -7.283 1.31e-12 ***</h3>
+</div>
+<div id="b-9.312e-03-2.686e-03-3.467-0.000573" class="section level3">
+<h3>b 9.312e-03 2.686e-03 3.467 0.000573 ***</h3>
+</div>
+<div id="lstat--5.248e-01-5.072e-02--10.347-2e-16" class="section level3">
+<h3>lstat -5.248e-01 5.072e-02 -10.347 &lt; 2e-16 ***</h3>
+</div>
+</div>
+<div id="significance-level-below-0.001-for-these-8-variables-zn-nox-rm-dis-rad-ptratio-b-lstat" class="section level2">
+<h2>Significance level below 0.001 for these 8 variables; zn, nox, rm, dis, rad, ptratio, b, lstat</h2>
+</div>
+<div id="which-of-these-8-are-the-most-important" class="section level2">
+<h2>which of these 8 are the most important</h2>
+<p>anv &lt;- anova(BH_Model) anv</p>
+</div>
+<div id="use-the-anova-analysis-and-determine-the-order-of-importance-of-these-four-variables" class="section level2">
+<h2>Use the anova analysis and determine the order of importance of these four variables</h2>
+<p>anv$imp &lt;- anv[,2]/sum(anv[,2]) anv</p>
+<p>anv %&gt;% arrange(desc(imp))</p>
+<div id="imagine-two-houses-that-are-identical-in-all-aspects-but-in-the-neighborhood-of-one-of-them-the-pupil-teacher-ratio-is-15-and-in-the-other-one-is-18.-which-one-is-more-expensive-and-by-how-much-golden-question-10-extra-marks-if-you-answer" class="section level3">
+<h3>Imagine two houses that are identical in all aspects but in the neighborhood of one of them the pupil-teacher ratio is 15 and in the other one is 18. Which one is more expensive and by how much? (Golden Question: 10 extra marks if you answer)</h3>
+<p>summary(BH_Model2)</p>
+<p>BH_Model3 &lt;- lm(medv~crim+zn+indus+chas1+nox+rm+age+dis+rad+tax+15+b+lstat,data=BostonHousing) (ptratio_15 &lt;- 36.46 - (0.9527 *15))</p>
+<p>(ptratio_18 &lt;- 36.46 - (0.9527 *18))</p>
+</div>
+<div id="based-on-these-two-values-ptratio-of-15-has-more-significance-on-the-value-of-the-house-so-it-makes-it-more-expensive-if-the-ptratio-is-lower" class="section level3">
+<h3>based on these two values, ptratio of 15 has more significance on the value of the house so it makes it more expensive if the ptratio is lower</h3>
+</div>
 </div>
 
 

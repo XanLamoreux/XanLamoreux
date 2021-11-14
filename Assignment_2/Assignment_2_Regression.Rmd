@@ -44,5 +44,121 @@ library(cowplot)
 library(ggplot2)
 
 set.seed(2017)
+head(mtcars)
+X=runif(100)*10
+Y=X*4+3.45
+Y=rnorm(100)*0.29*Y+Y
+plot(X,Y)
+cor(X,Y)
+## 80.7% corrlation between X and Y
+
+df <- data.frame(X,Y)
+
+Model_1 <- lm(Y~X,data=df)
+summary(Model_1)
+
+## Y=MX+C
+## Y=3.6108X+4.4655
+## The accuracy is 0.6517 based on the R Squared from the summary of the model
+
+cor(X,Y)
+R_SQU <- cor(X,Y)^2
+R_SQU
+## it's the same as the square root of the coefficient 0.6517187
+
+ggplot(df,aes(x=X,y=Y))+geom_point()+geom_smooth(method="lm",se=FALSE)+labs(title="simple linear regression Y and X")
+
+head(mtcars)
+
+Model_James <- lm(hp~wt,data=mtcars)
+summary(Model_James)
+ggplot(mtcars,aes(x=wt,y=hp))+geom_point()+geom_smooth(method="lm",se=FALSE)
+
+Model_Chris <- lm(hp~mpg,data=mtcars)
+summary(Model_Chris)
+ggplot(mtcars,aes(x=mpg,y=hp))+geom_point()+geom_smooth(method="lm",se=FALSE)
+
+## Chris' model is more accurate in terms of finding horse power
+
+
+Model_Cylinder <- lm(hp~cyl+mpg,data=mtcars)
+summary(Model_Cylinder)
+
+predict(Model_Cylinder,data.frame(cyl=4,mpg=22))
+
+## R score for the cylinder model is 88.93618
+
+
+install.packages('mlbench')
+library(mlbench)
+data(BostonHousing)
+
+glimpse(BostonHousing)
+
+## so the medv is based on the variables such as the crim, zn, ptratio, and chas
+
+apply(BostonHousing,2,function(x) {any(is.na(x))})
+
+
+BH_Model <- lm(medv~crim+zn+ptratio+chas,data=BostonHousing)
+summary(BH_Model)
+
+## this model is not as accurate as expected, it's only 35% accurate
+
+BH_Model2 <- lm(medv~.,data=BostonHousing)
+summary(BH_Model2)
+
+## the chas impacts the intercept by 2.687 so the intercept without the chas = 36.46 and with the chas it is equal to 36.46+2.687 = 39.147
+
+## p variables
+## this will run only significant values
+
+install.packages("tidyr")
+library(tidyr)
+install.packages("dplyr")
+library(dplyr)
+
+tidy(BH_Model2) %>% filter(p.value<0.001) %>% select(term)
+
+install.packages("generics")
+library(generics)
+
+### zn           4.642e-02  1.373e-02   3.382 0.000778 ***
+### nox         -1.777e+01  3.820e+00  -4.651 4.25e-06 ***
+### rm           3.810e+00  4.179e-01   9.116  < 2e-16 ***
+### dis         -1.476e+00  1.995e-01  -7.398 6.01e-13 ***
+### rad          3.060e-01  6.635e-02   4.613 5.07e-06 ***
+### ptratio     -9.527e-01  1.308e-01  -7.283 1.31e-12 ***
+### b            9.312e-03  2.686e-03   3.467 0.000573 ***
+### lstat       -5.248e-01  5.072e-02 -10.347  < 2e-16 ***
+
+## Significance level below 0.001 for these 8 variables; zn, nox, rm, dis, rad, ptratio, b, lstat
+
+## which of these 8 are the most important
+
+anv <- anova(BH_Model)
+anv
+
+## Use the anova analysis and determine the order of importance of these four variables
+
+anv$imp <- anv[,2]/sum(anv[,2])
+anv
+
+anv %>% arrange(desc(imp))
+
+
+### Imagine two houses that are identical in all aspects but in the neighborhood of one of them the pupil-teacher ratio is 15 and in the other one is 18. Which one is more expensive and by how much? (Golden Question: 10 extra marks if you answer)
+
+summary(BH_Model2)
+
+BH_Model3 <- lm(medv~crim+zn+indus+chas1+nox+rm+age+dis+rad+tax+15+b+lstat,data=BostonHousing)
+(ptratio_15 <- 36.46 - (0.9527 *15))
+
+
+(ptratio_18 <- 36.46 - (0.9527 *18))
+
+### based on these two values, ptratio of 15 has more significance on the value of the house so it makes it more expensive if the ptratio is lower
+
+
 
 
