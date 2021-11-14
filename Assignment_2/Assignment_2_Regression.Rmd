@@ -30,8 +30,19 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 mtcars <- read_csv("mtcars.csv")
 
+install.packages("caret")
+library(caret)
+library(dplyr)
+install.packages("tidyverse")
+library(tidyverse)
+install.packages("cluster")
+library(cluster)
+install.packages("factoextra")
+library(factoextra)
+install.packages("cowplot")
+library(cowplot)
+library(ggplot2)
 
-
-
+set.seed(2017)
 
 
