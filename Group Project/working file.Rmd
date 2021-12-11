@@ -1,0 +1,116 @@
+---
+title: "Group Project"
+output: html_document
+---
+
+
+Churn_Train <- read_csv("Group Project/Churn_Train.csv")
+
+churnTrain <- read_csv("Group Project/Churn_Train.csv")
+
+install.packages("tidyverse")
+
+library(tidyverse)
+install.packages("caret")
+library(caret)
+install.packages("ggplot2")
+library(ggplot2)
+install.packages("e1071")
+library(e1071)
+install.packages("lattice")
+library(lattice)
+library(dplyr)
+install.packages("dplyr")
+install.packages("class")
+library(class)
+summary(churnTrain)
+install.packages("VIM")
+library(VIM)
+
+install.packages("ggcorrplot")
+library(ggcorrplot)
+
+#Review fields with NAs
+#Create a dataframe where we are seeing any record that has a null value
+
+churnTrain_NA <- churnTrain[!complete.cases(churnTrain),]
+glimpse(churnTrain_NA)
+
+#Working to populate those values that are null using K-Nearest Neighbor to see how it affects the data. All of the 
+#fields in the vector are those with records that have NA’s.
+
+Churn_Train_NA_Updated <- kNN(churnTrain, variable = c("account_length","number_vmail_messages","total_day_minutes","total_day_calls","total_day_charge","total_eve_minutes","total_eve_calls","total_eve_charge","total_night_minutes","total_night_charge","total_intl_minutes","total_intl_calls","total_intl_charge","number_customer_service_calls"), k=7)
+
+#Replaced fields that had negative values with the absolute value of those records
+
+Churn_Train_NA_Updated_Final$account_length[Churn_Train_NA_Updated_Final$account_length<0] <- abs(Churn_Train_NA_Updated_Final$account_length[Churn_Train_NA_Updated_Final$account_length<0])
+
+Churn_Train_NA_Updated_Final$number_vmail_messages[Churn_Train_NA_Updated_Final$number_vmail_messages<0] <- abs(Churn_Train_NA_Updated_Final$number_vmail_messages[Churn_Train_NA_Updated_Final$number_vmail_messages<0])
+
+
+Churn_Train_NA_Updated_Final$account_length[Churn_Train_NA_Updated_Final$account_length<0] <- abs(Churn_Train_NA_Updated_Final$account_length[Churn_Train_NA_Updated_Final$account_length<0])
+
+#removing the fields created by the K-Nearest Neighbor Method
+
+Churn_Train_NA_Updated_Final <- Churn_Train_NA_Updated %>% select(-one_of("total_intl_calls_imp","total_intl_minutes_imp","total_eve_minutes_imp","total_night_charge_imp","total_day_charge_imp","total_night_minutes_imp","total_day_calls_imp","number_customer_service_calls_imp","total_eve_charge_imp","total_day_minutes_imp","total_intl_charge_imp","total_eve_calls_imp","number_vmail_messages_imp","account_length_imp"))
+
+#Replaced fields that had negative values with the absolute value of those records
+
+Churn_Train_NA_Updated_Final$account_length[Churn_Train_NA_Updated_Final$account_length<0] <- abs(Churn_Train_NA_Updated_Final$account_length[Churn_Train_NA_Updated_Final$account_length<0])
+
+Churn_Train_NA_Updated_Final$number_vmail_messages[Churn_Train_NA_Updated_Final$number_vmail_messages<0] <- abs(Churn_Train_NA_Updated_Final$number_vmail_messages[Churn_Train_NA_Updated_Final$number_vmail_messages<0])
+
+#Process for selecting only numeric variables and removing any non-complete (any null values in any field) records
+#and using corrplot to visualize any possible correlations of numerical values
+
+
+install.packages("corrplot")
+library(corrplot)
+
+churn_numerical <- Churn_Train_NA_Updated_Final %>% select(-one_of("state","area_code","international_plan","voice_mail_plan","churn"))
+corrplot(cor(churn_numerical),method="square", col=colorRampPalette(c("purple","orange"))(200))
+
+#Also wanted to look to see what data have outliers or have a significant variation in value. Created boxplot for all of 
+#the numerical categories. First we needed to adjust the margins so we could see the labels, then plotted. 
+
+par(mar=c(13,4,4,1)+.1)
+boxplot(churn_numerical, col=rainbow(20), las=2)
+
+#creation of histograms for two fields with obvious outliers
+
+hist(churn_numerical$total_eve_minutes, main="Minutes - Evening", xlab = "Total Evening Minutes")
+hist(churn_numerical$total_day_minutes, main="Minutes - Day", xlab = "Total Day Minutes")
+
+#Updating final variable name to something more suitable
+ChurnTrain_Final <- Churn_Train_NA_Updated_Final
+
+install.packages("epiDisplay")
+library(epiDisplay)
+
+table(ChurnTrain_Final$churn)
+table(ChurnTrain_Final$churn, ChurnTrain_Final$state)
+table(ChurnTrain_Final$churn, ChurnTrain_Final$international_plan)
+table(ChurnTrain_Final$churn, ChurnTrain_Final$voice_mail_plan)
+table(ChurnTrain_Final$churn, ChurnTrain_Final$number_customer_service_calls)
+table(ChurnTrain_Final$churn, ChurnTrain_Final$total_eve_minutes)
+
+library(ggplot2)
+ggplot(ChurnTrain_Final, aes(x = log(number_customer_service_calls))) + geom_histogram(fill = 'blue', bins=12) + labs(x="Churn", y="No Churn",title = "Probability Distribution # Service Calls") + theme_classic()
+
+plot(x=ChurnTrain_Final$churn, y=ChurnTrain_Final$number_customer_service_calls)
+
+
+Total_eve_minutes - total_day_minutes
+
+
+count(ChurnTrain_Final, 'churn')
+
+tab1(ChurnTrain_Final$number_customer_service_calls, sort.group = "decreasing", cum.percent = TRUE)
+
+
+
+
+
+
+
+
