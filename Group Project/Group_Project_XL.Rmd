@@ -1,6 +1,8 @@
 ---
 title: "Group_Project_XL"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 
@@ -155,30 +157,47 @@ roc(Churn_Data_test_df$churn, pred_probs)
 plot.roc(roc(Churn_Data_test_df$churn, pred_probs))
 
 
+
+# Applying the model to the Customers to Predict data file
+
+# Load the data file
+
 load("C:/Users/xlamo/Desktop/XanLamoreux/Group Project/Customers_To_Predict.RData")
+
+# creating a copy to work with
 
 customer_predict <- Customers_To_Predict
 
+# removing the state column as it is not necessary
 
 customer_predict <- customer_predict %>% select(-state) %>% 
   fastDummies::dummy_cols(., remove_selected_columns = TRUE)
 
 # Transformation for scaling the data (Z score transformation)
+
 customer_predict <- as.data.frame(scale(customer_predict))
 
 #predicting the model with the test data
+
 predict_labels <- predict(object=Model_1,customer_predict,type="response")
 
 
-# applies the probability ratio if under 60% will not churn
+# applies the probability ratio if under 60% customer will not churn
+
 Model_Pre_lables_2 <- as.factor(ifelse(predict_labels>0.6 ,"yes","no"))
 
 
 # adding chrun column and attaching the predictor from the model
+
 Customers_To_Predict <- Customers_To_Predict %>% mutate(churn=Model_Pre_lables_2)
 
 # visual of the results which shows that 267 will churn
+
 table(Customers_To_Predict$churn)
+
+View(Customers_To_Predict)
+
+# The Customers_To_Predict file can be exported as the final results of our model
 
 
 
